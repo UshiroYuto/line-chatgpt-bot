@@ -43,3 +43,13 @@ def handle_message(event):
 
 if __name__ == "__main__":
     app.run()
+
+from openai.error import RateLimitError
+…
+try:
+    resp = openai.ChatCompletion.create(…)
+    reply = resp.choices[0].message.content.strip()
+except RateLimitError:
+    reply = "申し訳ありません。無料枠を使い切りました！"
+…
+

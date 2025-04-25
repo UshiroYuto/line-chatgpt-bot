@@ -1,0 +1,2 @@
+# line-chatgpt-bot
+LINEとChatGPTをつなぐBot

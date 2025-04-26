@@ -16,7 +16,7 @@ LINE_CHANNEL_SECRET       = os.getenv("LINE_CHANNEL_SECRET", "")
 LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN", "")
 OPENAI_API_KEY            = os.getenv("OPENAI_API_KEY", "")
 MODEL_NAME                = "gpt-4o"   # ← ここでモデル変更
-BOT_NAME                  = "＠トマソン君"  # 実際にログに出たメンション文字列に合わせて
+BOT_NAME                  = "@トマソン君"  # 実際にログに出たメンション文字列に合わせて
 
 PERSONA_PROMPT = """
 あなたは「不条理コントユニットMELT」の全てを知り尽くしている秘書、

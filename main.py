@@ -93,5 +93,22 @@ def handle_message(event):
     except LineBotApiError as e:
         logging.error(f"LineBotApiError: {e}")
 
+import logging
+import traceback
+
+# 既に logging.basicConfig(level=logging.INFO) などをしている前提
+
+@app.route("/callback", methods=["POST"])
+def callback():
+    signature = request.headers.get("X-Line-Signature", "")
+    body      = request.get_data(as_text=True)
+    try:
+        handler.handle(body, signature)
+    except Exception as e:
+        # ここで全例外をキャッチしてログに出す
+        logging.error("Unhandled exception in callback:\n" + traceback.format_exc())
+        abort(500)
+    return "OK"
+
 if __name__ == "__main__":
     app.run()

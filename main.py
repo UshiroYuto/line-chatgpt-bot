@@ -74,25 +74,32 @@ def handle_message(event):
         )
         reply = resp.choices[0].message.content.strip()
     except RateLimitError:
-        reply = "申し訳ありません。現在混み合っていて応答できません。"
+        reply = "申し訳ありません。無料枠を使い果たしました"
     except Exception:
         logging.error("Error calling OpenAI:\n" + traceback.format_exc())
         reply = "すみません、回答中にエラーが発生しました。"
 
     # グループならpush、それ以外（1:1）はreply
     try:
-        if event.source.type == "group":
-            line_bot_api.push_message(
-                event.source.group_id,
-                TextSendMessage(text=reply)
-            )
-        else:
+         # グループ or 複数人トーク（room）は push_message で
+        if event.source.type in ("group", "room"):
+             target_id = (
+                 event.source.group_id
+                 if event.source.type == "group"
+                 else event.source.room_id
+             )
+             line_bot_api.push_message(
+                 target_id,
+                 TextSendMessage(text=reply)
+             )
+         else:
+             # 1:1 トークのみ reply_message
             line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text=reply)
-            )
-    except LineBotApiError as e:
-        logging.error(f"LineBotApiError: {e.status_code} {e.error.message}")
+                 event.reply_token,
+                 TextSendMessage(text=reply)
+             )
+     except LineBotApiError as e:
+         logging.error(f"LineBotApiError: {e.status_code} {e.error.message}")
 
 # ─── アプリ起動 ───
 if __name__ == "__main__":

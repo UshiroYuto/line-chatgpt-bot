@@ -103,5 +103,5 @@ def handle_message(event):
 
 
 # アプリ起動
-if__name__=="__main__":
-   app.run()
+if __name__ == "__main__":
+    app.run()

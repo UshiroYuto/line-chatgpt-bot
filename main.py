@@ -98,3 +98,7 @@ def handle_message(event):
             )
     except LineBotApiError as e:
         logging.error(f"LineBotApiError: {e.status_code} {e.error.message}")
+
+# アプリ起動
+if__name__=="__main__":
+   app.run()

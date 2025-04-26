@@ -79,9 +79,16 @@ def handle_message(event):
         logging.error("Error calling OpenAI:\n" + traceback.format_exc())
         reply = "すみません、回答中にエラーが発生しました。"
 
-    # ─── ここからPush／Reply部分 ───
+        # ─── 応答を送るロジック ───
     try:
-        if event.source.type in ("group", "room"):
+        # 1:1チャットは reply
+        if event.source.type == "user":
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text=reply)
+            )
+        # group/room は push
+        else:
             target_id = (
                 event.source.group_id
                 if event.source.type == "group"
@@ -91,13 +98,9 @@ def handle_message(event):
                 target_id,
                 TextSendMessage(text=reply)
             )
-        else:
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text=reply)
-            )
     except LineBotApiError as e:
-        logging.error(f"LineBotApiError: {e.status_code} {e.error.message}")
+        logging.error(f"LineBotApiError sending message: {e.status_code} {e.error.message}")
+
 
 # アプリ起動
 if__name__=="__main__":

@@ -50,14 +50,16 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     text = event.message.text
-    logging.info(f"Received ({event.source.type}): {text}")
+    logging.info(f"Received ({event.source.type}): {repr(text)}")
 
-    # グループ／ルームではメンション必須
+    # グループ／ルームでは「トマソン君」という名前検知のみ
     if event.source.type in ("group", "room"):
-        if BOT_NAME not in text:
-            logging.info("→ BOT_NAME not in text, ignoring.")
+        if "トマソン君" not in text:
+            logging.info("→ 'トマソン君' not in text, ignoring.")
             return
-        text = text.replace(BOT_NAME, "").strip()
+        # 名前を除去してからChatGPTに投げる
+        text = text.replace("トマソン君", "").strip()
+
 
     # GPT呼び出し用メッセージ組み立て
     messages = [
